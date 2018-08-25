@@ -9,7 +9,21 @@ example(of: "just, of, from") {
     
     // 2
     let observable: Observable<Int> = Observable<Int>.just(one)
-    let observable2 = Observable<Int>.of(two)
+    let observable2 = Observable.of(one, two, three)
+    let observable3 = Observable.of([one, two, three])
+    let observable4 = Observable.from([one, two, three])
+}
+
+example(of: "subscribe") {
+    
+    let one = 1
+    let two = 2
+    let three = 3
+    
+    let observable = Observable.of(one, two, three)
+    observable.subscribe { event in
+        print(event)
+    }
 }
 
 example(of: "Never") {
