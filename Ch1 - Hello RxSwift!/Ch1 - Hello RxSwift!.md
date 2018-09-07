@@ -73,7 +73,7 @@ Side Effect는 **현재 흐름의 밖에서 야기하는 상태의 변화**를 �
 ### 4. Declarative code
 명령형 프로그래밍에서는 상태를 우리의 의지대로 바꾸지만 함수형 프로그래밍에서는 우리가 side effect를 일으키지 않는다. 하지만 우리가 완벽한 세상에서 살지 않기 때문에 둘 사이에서 균형을 찾는 것이 중요한데, RxSwift가 그것을 해낸다.
 
-선언형 코드는 행동을 정의하고 RxSwift에서 관련된 이벤트가 있을 대 그것을 실행하고 함께 동작할 데이터를 내놓는다.
+선언형 코드는 행동을 정의하고 RxSwift에서 관련된 이벤트가 있을 때 그것을 실행하고 함께 동작할 데이터를 내놓는다.
 
 > 참고 링크: [명령형 프로그래밍과 함수형 프로그래밍 비교
 ](https://github.com/funfunStudy/study/wiki/%EB%AA%85%EB%A0%B9%ED%98%95-%ED%94%84%EB%A1%9C%EA%B7%B8%EB%9E%98%EB%B0%8D%EA%B3%BC-%ED%95%A8%EC%88%98%ED%98%95-%ED%94%84%EB%A1%9C%EA%B7%B8%EB%9E%98%EB%B0%8D-%EB%B9%84%EA%B5%90)
@@ -81,7 +81,7 @@ Side Effect는 **현재 흐름의 밖에서 야기하는 상태의 변화**를 �
 ### 5. Reactive systems
 Reactive 시스템은 다음과 같은 특성을 보인다.
 - **Responsive**: UI를 항상 최신의 상태로 유지한다.
-- **Resilien**: 각 행동이 분리되어 있고 에러 회복에 유연하다.
+- **Resilient**: 각 행동이 분리되어 있고 에러 회복에 유연하다.
 - **Elastic**: 코드가 lazy pull-driven collections, event throttling, resource sharing 등 다양한 작업을 처리한다.
 - **Message driven**: 요소들 간 메시지 기반의 커뮤니케이션을 통해 재사용성과 분리성을 높이고 라이프 사이클과 클래스의 구현을 분리한다.
 
@@ -90,7 +90,7 @@ Reactive 시스템은 다음과 같은 특성을 보인다.
 ### Observables
 `Observable<T>` 클래스는 Rx 코드의 기반을 제공한다: 데이터 `T`의 불변하는 스냅샷을 전달하는 이벤트들의 시퀀스를 비동기적으로 제공하는 능력. 이 `Observable<T>`를 통해 옵저버는 이벤트에 대응하고 앱의 UI를 갱신한다.
 
-`ObservableType` 프로콜은 매우 쉽다. 다음과 같은 세 유형의 `Event`를 방출한다. enum으로 되어 있다.
+`ObservableType` 프로토콜은 매우 쉽다. 다음과 같은 세 유형의 `Event`를 방출한다. enum으로 되어 있다.
 - A `next` event: 가장 최신인 데이터를 "담고" 있는 이벤트. 옵저버가 값을 "받는" 방법이다.
 - A `completed` event: 성공과 함께 이벤트 시퀀스를 종료하는 이벤트. 성공적으로 라이프 사이클을 끝냈다는 의미이며 더 이상 이벤트를 방출하지 않는다.
 - An `error` event: 에러와 함께 이벤트 시퀀스를 종료하며 더 이상 이벤트를 방출하지 않는다.
