@@ -10,7 +10,7 @@
 
 실제로 이 세 가지는 모두 같은 것들이다. 가끔 `Stream`이라는 용어를 사용하는 것을 볼 수 있는데 이 용어는 다른 Rx 프로그래밍 환경에서 적합하다. 하지만 RxSwift에서는 sequence로 사용한다.
 
-Obervable은 **특별한 함을 가진** sequence이다. 그 중 하나가 *asynchronous*이다. Observable은 이벤트를 *emitting*하는데, 각각의 이벤트는 값을 가지고 있다.
+Obervable은 **특별한 힘을 가진** sequence이다. 그 중 하나가 *asynchronous*이다. Observable은 이벤트를 *emitting*하는데, 각각의 이벤트는 값을 가지고 있다.
 
 ## Lifecycle of an observable
 Observable은 다음과 같은 생명 주기를 가진다.
