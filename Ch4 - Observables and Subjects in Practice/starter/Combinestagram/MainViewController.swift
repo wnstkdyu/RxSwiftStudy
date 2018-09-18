@@ -93,9 +93,13 @@ class MainViewController: UIViewController {
     }
 
     func showMessage(_ title: String, description: String? = nil) {
-        let alert = UIAlertController(title: title, message: description, preferredStyle: .alert)
-        alert.addAction(UIAlertAction(title: "Close", style: .default, handler: { [weak self] _ in self?.dismiss(animated: true, completion: nil)}))
-        present(alert, animated: true, completion: nil)
+//        let alert = UIAlertController(title: title, message: description, preferredStyle: .alert)
+//        alert.addAction(UIAlertAction(title: "Close", style: .default, handler: { [weak self] _ in self?.dismiss(animated: true, completion: nil)}))
+//        present(alert, animated: true, completion: nil)
+        
+        presentAlert(title: title, description: description)
+            .subscribe()
+            .disposed(by: bag)
     }
 }
 
@@ -103,9 +107,11 @@ extension UIViewController {
     func presentAlert(title: String, description: String? = nil) -> Completable {
         return Completable.create(subscribe: { [weak self] completable in
             let alert = UIAlertController(title: title, message: description, preferredStyle: .alert)
-            alert.addAction(UIAlertAction(title: "Close", style: .default, handler: { _ in completable(.completed)}
-            ))
+            alert.addAction(UIAlertAction(title: "Close", style: .default) { _ in
+                completable(.completed)
+            })
             self?.present(alert, animated: true, completion: nil)
+            
             return Disposables.create {
                 self?.dismiss(animated: true, completion: nil)
             }
