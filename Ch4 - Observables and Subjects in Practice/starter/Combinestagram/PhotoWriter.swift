@@ -31,8 +31,8 @@ class PhotoWriter {
     }
     
     //애플의 비동기 API를 래핑한 옵저버블
-    static func save(_ image: UIImage) -> Observable<String> {
-        return Observable.create({ observer in
+    static func save(_ image: UIImage) -> Single<String> {
+        return Single.create(subscribe: { event in
             //이벤트를 만들자. 이미지를 저장하고, 저장끝났으면 아이디 반환하는 이벤트
             var savedAssetId: String?
             PHPhotoLibrary.shared().performChanges({
@@ -41,10 +41,9 @@ class PhotoWriter {
             }, completionHandler: { success, error in
                 DispatchQueue.main.async {
                     if success, let id = savedAssetId {
-                        observer.onNext(id)
-                        observer.onCompleted()
+                        event(.success(id))
                     } else {
-                        observer.onError(error ?? Errors.couldNotSavePhoto)
+                        event(.error(error ?? Errors.couldNotSavePhoto))
                     }
                 }
             })
