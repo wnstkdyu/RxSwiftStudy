@@ -257,5 +257,142 @@ example(of: "takeUntil") {
 }
 ```
 
-###
+## Distinct operators
+
+### `distinctUntilChanged`
+연속하는 원소 중 중복하는 원소가 나오는 것을 방지하는 operator이다. 
+
+``` Swift
+example(of: "distinctUntilChanged") {
+    let disposeBag = DisposeBag()
+    
+    // 1
+    Observable.of("A", "A", "B", "B", "A")
+        //  2
+        .distinctUntilChanged()
+        .subscribe(onNext: {
+            print($0)
+        })
+        .disposed(by: disposeBag)
+    // A
+    // B
+    // A
+}
+```
+ 
+연속되는 중복 원소에 대해서만 제외하기 때문에 "A", "B"가 한 번씩 제외된다.
+
+### `distinctUntilChanged(_:)`
+위의 예에서는 원소가 문자열로 `Equatable`을 준수하기 때문에 그냥 넘겨주어도 된다. 하지만 `distinctUntilChanged(_:)`를 사용해 직접 비교 로직을 제공할 수도 있다.
+
+``` Swift
+example(of: "distinctUntilChanged(_:)") {
+    let disposeBag = DisposeBag()
+    
+    // 1
+    let formatter = NumberFormatter()
+    formatter.numberStyle = .spellOut
+    
+    // 2
+    Observable<NSNumber>.of(10, 110, 20, 200, 210, 310)
+        // 3
+        .distinctUntilChanged { a, b in
+            // 4
+            guard let aWords = formatter.string(from: a)?.components(separatedBy: " "),
+                let bWords = formatter.string(from: b)?.components(separatedBy: " ") else {
+                    return false
+            }
+            
+            var containsMatch = false
+            
+            for aWord in aWords {
+                for bWord in bWords {
+                    if aWord == bWord {
+                        containsMatch = true
+                        break
+                    }
+                }
+            }
+            
+            return containsMatch
+        }
+        .subscribe(onNext: {
+            print($0)
+        })
+        .disposed(by: disposeBag)
+    // 10
+    // 20
+    // 200
+}
+```
+
+> 왜 10, 20, 200이 출력되는 지 잘 모르겠다...
+
+## Challenges
+
+### Challenge 1: Create a phone number lookup
+
+``` Swift
+example(of: "Challenge 1") {
+  
+    let disposeBag = DisposeBag()
+
+    let contacts = [
+        "603-555-1212": "Florent",
+        "212-555-1212": "Junior",
+        "408-555-1212": "Marin",
+        "617-555-1212": "Scott"
+    ]
+  
+    func phoneNumber(from inputs: [Int]) -> String {
+        var phone = inputs.map(String.init).joined()
+
+        phone.insert("-", at: phone.index(
+            phone.startIndex,
+            offsetBy: 3)
+        )
+
+        phone.insert("-", at: phone.index(
+            phone.startIndex,
+            offsetBy: 7)
+        )
+
+        return phone
+    }
+  
+    let input = PublishSubject<Int>()
+
+    // Add your code here
+    input
+        .skipWhile { $0 == 0 }
+        .filter { $0 < 10 }
+        .take(10)
+        .toArray()
+        .map { phoneNumber(from: $0) }
+        .subscribe (onNext: { phone in
+            if let contact = contacts[phone] {
+                print("Dialing \(contact) \(phone)...")
+            } else {
+                print("Contact not found")
+            }
+        })
+
+    input.onNext(0)
+    input.onNext(603)
+
+    input.onNext(2)
+    input.onNext(1)
+
+    // Confirm that 7 results in "Contact not found", and then change to 2 and confirm that Junior is found
+    input.onNext(2)
+
+    "5551212".forEach {
+        if let number = Int("\($0)") {
+            input.onNext(number)
+        }
+    }
+  
+    input.onNext(9)
+}
+```
 
