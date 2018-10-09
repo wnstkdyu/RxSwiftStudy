@@ -376,6 +376,7 @@ example(of: "Challenge 1") {
                 print("Contact not found")
             }
         })
+        .disposed(by: disposeBag)
 
     input.onNext(0)
     input.onNext(603)
